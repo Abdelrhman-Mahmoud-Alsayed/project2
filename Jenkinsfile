@@ -41,16 +41,27 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    sh """
-                        docker run -p 5000:5000 --name "${APP_NAME}"-"main"-${BUILD_NUMBER} -d ${APP_NAME}:${BUILD_NUMBER}
-                        docker ps
-                    """
-                }
-            }
+      stage('Run Docker Container') {
+    steps {
+        script {
+            sh '''
+                CONTAINER_NAME="app-hello-nti-main-7"
+
+                # Remove the old container if it exists
+                docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+
+                # Run the new container
+                docker run -d \
+                    --name "$CONTAINER_NAME" \
+                    -p 5001:5000 \
+                    app-hello-nti:7
+
+                # Show running containers
+                docker ps
+            '''
         }
+    }
+}
 
     }
 }
