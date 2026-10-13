@@ -51,5 +51,13 @@ pipeline {
                 }
             }
         }
+        stage('Run Docker Container') {
+    steps {
+        sh '''
+          docker rm -f app-hello-nti || true
+          docker run -d --name app-hello-nti -p 5000:5000 app-hello-nti:${BUILD_NUMBER}
+        '''
+    }
+}
     }
 }
